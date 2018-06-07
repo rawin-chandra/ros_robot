@@ -1,4 +1,9 @@
+/* credit
+adapted from tutorial code of Janez Cimerman 
 
+https://meetjanez.splet.arnes.si/2016/01/03/enabling-odometry-creating-odom-messege-connecting-with-slam-tutorial
+
+*/
 
 #include <ros.h>
 #include <std_msgs/String.h>
