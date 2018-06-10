@@ -1,0 +1,50 @@
+<launch>
+  <master auto="start"/>
+
+  <node name="ros_serial"  pkg="rosserial_python"  type="serial_node.py" output="screen" args="/dev/ttyACM0"/>
+     
+  <node name="odom_bot"  pkg="robot_odom"  type="odom_bot" output="screen"/>
+
+  <node name="ydlidar_node"  pkg="ydlidar"  type="ydlidar_node" output="screen">
+    <param name="port"         type="string" value="/dev/ydlidar"/>  
+    <param name="baudrate"     type="int"    value="128000"/>
+    <param name="frame_id"     type="string" value="laser_frame"/>
+    <param name="angle_fixed"  type="bool"   value="true"/>
+    <param name="intensities"  type="bool"   value="false"/>
+    <param name="angle_min"    type="double" value="-180" />
+    <param name="angle_max"    type="double" value="180" />
+    <param name="range_min"    type="double" value="0.08" />
+    <param name="range_max"    type="double" value="10.0" />
+    <param name="ignore_array" type="string" value="" />    
+  </node>
+
+   <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
+    args="0.0 0.0 0.0 0.0 0.0  0.0 base_link laser_frame 40" /> 
+  
+
+ <!-- <node name="rviz" pkg="rviz" type="rviz"/>  -->
+
+
+  <!-- Run the map server   myhome.pgm-->
+ <node name="map_server" pkg="map_server" type="map_server" args="/home/rawin/home_map_ok.yaml"/>
+<!-- mamap2 -->
+
+  <!--- Run AMCL -->
+  <include file="$(find amcl)/examples/amcl_diff.launch" />   
+
+
+<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+   <!-- <param name="controller_frequency" value="5.0" />  -->
+
+    <param name="base_global_planner" value="carrot_planner/CarrotPlanner" /> 
+
+    <rosparam file="/home/rawin/new_nav_test/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="/home/rawin/new_nav_test/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="/home/rawin/new_nav_test/local_costmap_params.yaml" command="load" />
+    <rosparam file="/home/rawin/new_nav_test/global_costmap_params.yaml" command="load" />
+    <rosparam file="/home/rawin/new_nav_test/base_local_planner_params.yaml" command="load" />
+  </node>
+ 
+ <node pkg="send_goal_action" type="send_goal_action" name="send_goal_action" output="screen" /> 
+  
+</launch>
