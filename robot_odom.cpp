@@ -14,11 +14,10 @@ this node subscribe to topic from arduino board (name /ard_odom) and re-pulish t
 float SVL,SVR;
 
 void callback(const geometry_msgs::Twist::ConstPtr& odom_msg)
-  {   
-	 float SVL,SVR;
+  {   	 
 
 	 SVL = odom_msg->linear.x;     
-   SVR = odom_msg->linear.y; 
+  	 SVR = odom_msg->linear.y; 
 
    }
 
