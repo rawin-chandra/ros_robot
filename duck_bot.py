@@ -3,16 +3,11 @@
 import rospy
 
 from sensor_msgs.msg import LaserScan
-from nav_msgs.msg import Path
-from geometry_msgs.msg import PoseStamped
-from geometry_msgs.msg import PoseWithCovarianceStamped
-
 from geometry_msgs.msg import Twist
-from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Point
+
 import math
 import time
-from tf.transformations import euler_from_quaternion
+
 
 
 pub = rospy.Publisher('cmd_vel', Twist, queue_size=10)        
@@ -38,42 +33,9 @@ def callback(data):
                  print ("MIN = " , min , " at " , i)
 
      
-     vel_msg = Twist()
+     #vel_msg = Twist()
 
-     if deg_min == 5:
-         if min > 0.2:
-            vel_msg.linear.x = 0.2
-            vel_msg.linear.y = 0
-            vel_msg.linear.z = 0
-            vel_msg.angular.x = 0
-            vel_msg.angular.y = 0
-            vel_msg.angular.z = 0
-         else:
-            vel_msg.linear.x = 0
-            vel_msg.linear.y = 0
-            vel_msg.linear.z = 0
-            vel_msg.angular.x = 0
-            vel_msg.angular.y = 0
-            vel_msg.angular.z = 0
-
-     else:
-         if deg_min > 5 and deg_min < 180:
-            vel_msg.linear.x = 0
-            vel_msg.linear.y = 0
-            vel_msg.linear.z = 0
-            vel_msg.angular.x = 0
-            vel_msg.angular.y = 0
-            vel_msg.angular.z = 1.0
-         elif deg_min >= 180:
-            vel_msg.linear.x = 0
-            vel_msg.linear.y = 0
-            vel_msg.linear.z = 0
-            vel_msg.angular.x = 0
-            vel_msg.angular.y = 0
-            vel_msg.angular.z = -1.0
-
-     pub.publish(vel_msg)
-   
+     #pub.publish(vel_msg)   
 
 
 if __name__ == "__main__":
