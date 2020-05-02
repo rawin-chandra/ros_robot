@@ -14,9 +14,7 @@ int16_t gx, gy, gz;
 int OdomCount = 0;
 
 int OdomWait = 3;
-static const float GYRO_SENS  =  160;  //160;  //900; //700;  //131.0; 132 133 135
-
-
+static const float GYRO_SENS  =  160;  
 
 int LMotor = 1;
 int RMotor = 0;
@@ -38,15 +36,14 @@ long Time[2] = {0,0};
 
 float WheelSeparation = 0.24; //0.17
 float WheelDiameter = 0.07;  //60 to fast
-int TPR = 700;//720; //750; //700; //1000; //1230;  //650; //640; //630;  //620; //1240; /  //Encoder ticks per rotation  330  350  380  700 175 180
-//one tick = 0.7 cm 
+int TPR = 700; //Encoder ticks per rotation  
+
 volatile int counterL = 0;
 volatile int counterR = 0;
 
 int AccParam = 3; //acceleration multiplier.
 
 int dir;
-
 
 int bot_vel;
 int count = 0;
@@ -60,23 +57,19 @@ ros::NodeHandle  nh;
 geometry_msgs::Twist odom_msg;
 ros::Publisher Pub ("ard_odom", &odom_msg);  
 
-//int brake_count = 0;
-//int real_pwm = 0;
 
 void countL() {
       if(WCS[0]  > 0)
          counterL++; 
-      else             //if(right_forward == false)
-         counterL--;  
- 
+      else             
+         counterL--;   
 }
 
 void countR() {
       if(WCS[1]  > 0)
          counterR++; 
-      else             //if(right_forward == false)
-         counterR--;  
- 
+      else            
+         counterR--;   
 }
 
 void forward() {    
@@ -104,7 +97,7 @@ void right() {
    dir = 3;
 }
 
-void stop() {             //       pwm1 = 13; dir1 = 12; pwm2 = 11;  dir2 = 10;
+void stop() {             
    analogWrite(pwm1, 0); 
    analogWrite(pwm2, 0); 
 }
@@ -131,8 +124,7 @@ double left_vel = 0.0;
       }
       //write new command speeds to global vars 
       WCS[0] = left_vel;
-      WCS[1] = right_vel;
-     
+      WCS[1] = right_vel;     
 }
 
 ros::Subscriber<geometry_msgs::Twist> sub("cmd_vel" , &velCallback);
@@ -175,8 +167,7 @@ double CorrectedSpeed(int M, double CVel){
   EVel = abs(EVel);
   CVel = abs(CVel);
   
-  double dif = EVel - CVel;
-  
+  double dif = EVel - CVel;  
   
   MWS[M] = MWS[M]-(dif * (AccParam));
 
@@ -202,9 +193,7 @@ void MotorWrite(){
 int DIR;
 int min_speed;
 
-    for(int i = 0; i<2; i++){
-        //correct turns of motors
-        
+    for(int i = 0; i<2; i++){  
         //correct speed with encoder data
         double MSpeed = CorrectedSpeed(i, WCS[i]);        
         
@@ -255,8 +244,7 @@ void motorGo(uint8_t l, uint8_t r)
         analogWrite(pwm1,l);
         analogWrite(pwm2,r);
     }
-  
-    }
+ }
 
 
 void setup() {  
@@ -295,28 +283,21 @@ void loop() {
     if(OdomCount > OdomWait){
           odom_msg.linear.x = Vels[0];
           odom_msg.linear.y = Vels[1];
-          accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);   
-          //mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);  
-          //gz = map(gz, -18000, 18000, 0, 180);          
-
-          //accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);  
-          //imu = (int)(gz/GYRO_SENS) + 1;
+          accelgyro.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);  
+         
           
           if(Vels[0] == 0 and Vels[1] == 0) {
                odom_msg.linear.z = 0;
           }
           else {
             imu = (int)(gz/GYRO_SENS) + 1;
-            if(imu > 0)
-                imu += 10;    //2  5  7
+            if(imu > 0)   //only my calibration
+                imu += 10;    
             else if(imu < 0)
-                imu -= 10;    //2  5  7
+                imu -= 10;   
                 
-            odom_msg.linear.z = imu;
-            
-          }               
-                   
-        
+            odom_msg.linear.z = imu;            
+          }                      
         Pub.publish(&odom_msg);
     
     }
