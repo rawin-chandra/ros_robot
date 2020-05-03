@@ -5,18 +5,13 @@
 #include <sensor_msgs/Imu.h>
  #include "std_msgs/String.h"
 
-
-
 //float v_linear,v_angular;
 float SVL,SVR;
 
-
 void callback(const geometry_msgs::Twist::ConstPtr& odom_msg)
   {
-
 	 SVL = odom_msg->linear.x;
    	 SVR = odom_msg->linear.y;  
-
    }
 
 
@@ -24,10 +19,7 @@ int main(int argc, char** argv){
  ros::init(argc, argv, "odometry_publisher");
 
 ros::NodeHandle n;
- //ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
-
-
-  //ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("base_pose_ground_truth", 50);
+ 
   ros::Publisher odom_pub = n.advertise<nav_msgs::Odometry>("odom", 50);
   tf::TransformBroadcaster odom_broadcaster;
 
@@ -39,8 +31,8 @@ ros::NodeHandle n;
   double v_linear,v_angular;
   double dt;
 
-   double x = 0.0;
-     double y = 0.0;
+    double x = 0.0;
+    double y = 0.0;
     double th = 0.0;
 
      double vx = 0.1;
@@ -49,15 +41,12 @@ ros::NodeHandle n;
 
      ros::Time current_time, last_time;
      current_time = ros::Time::now();
-   last_time = ros::Time::now();
-
-
+     last_time = ros::Time::now();
 
      ros::Rate r(20.0);
      while(n.ok()){
 
        ros::spinOnce();               // check for incoming messages
-
 
 	current_time = ros::Time::now();
 	dt = (current_time - last_time).toSec();
@@ -66,7 +55,7 @@ ros::NodeHandle n;
 		DR = dt * SVR;
 
 		dxy = (DL + DR) / 2;
-		dth = (DR - DL) / 0.45;         //0.445
+		dth = (DR - DL) / 0.45;         //width of robot, between 2 wheels, in meters
 
 		x += dxy * cos(th);
 	        y += dxy * sin(th);
@@ -87,7 +76,6 @@ ros::NodeHandle n;
        odom_trans.transform.translation.z = 0.0;
        odom_trans.transform.rotation = odom_quat;
 
-
        //send the transform
        odom_broadcaster.sendTransform(odom_trans);
 
@@ -105,16 +93,14 @@ ros::NodeHandle n;
 
        //set the velocity
        odom.child_frame_id = "base_link";
-       odom.twist.twist.linear.x = dxy / dt;	 //v_linear
-       odom.twist.twist.linear.y = 0;	 //vy
-       odom.twist.twist.angular.z = dth / dt;      //v_angular
-
+       odom.twist.twist.linear.x = dxy / dt;	 
+       odom.twist.twist.linear.y = 0;	 
+       odom.twist.twist.angular.z = dth / dt;     
 
        //publish the message
        odom_pub.publish(odom);
 
        last_time = current_time;
-	//v_linear = v_angular = 0;
 
        r.sleep();
      }
