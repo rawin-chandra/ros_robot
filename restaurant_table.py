@@ -3,6 +3,9 @@
 
 #make this code to be a ROS node
 #Dev. by T. Rawin http://www.facebook.com/teacherwinzatori
+#install pygame before => http://www.pygame.org
+#run this node after run move_base node
+#my on-line course => www.udemy.com/ros-robot
 
 import pygame
 import time
