@@ -1,20 +1,6 @@
 /*
-#include <Wire.h>
-#include <Adafruit_PWMServoDriver.h>
-
-Adafruit_PWMServoDriver pwm1 = Adafruit_PWMServoDriver(0x40);
-Adafruit_PWMServoDriver pwm2 = Adafruit_PWMServoDriver(0x41);
-
-void setup() {
-  Serial.begin(9600);
-  Serial.println("16 channel PWM test!");
-
-  pwm1.begin();
-  pwm1.setPWMFreq(1600);  // This is the maximum PWM frequency
-
-  pwm2.begin();
-  pwm2.setPWMFreq(1600);  // This is the maximum PWM frequency
-}
+Edit by T.Rawin Chaisittiporn (T. S)
+for use with servo motor driver and arduino 
 */
 
 #include <Wire.h>
@@ -102,59 +88,5 @@ void loop() {
   delay(1000);
   pwm.setPWM(6, 0, pulseWidth(90));  
   delay(2000);
-  
-  /*
-  pwm.setPWM(5, 0, pulseWidth(70));  
-  delay(2000);
-  
-  pwm.setPWM(5, 0, pulseWidth(90));  
-  delay(2000);
-
-  //pwm.setPWM(4, 0, pulseWidth(135));  
-  //delay(2000);
-  
-  pwm.setPWM(4, 0, pulseWidth(180));  
-  delay(2000);
-
-
-  pwm.setPWM(1, 0, pulseWidth(180));  
-  delay(2000);
-  
- Serial.println("90 3");
-  //delay(1000);
-  pwm.setPWM(1, 0, pulseWidth(90));  
-  delay(2000);
-  
-  Serial.println("0");
-  //delay(1000);
-  pwm.setPWM(2, 0, pulseWidth(0));  
-  delay(2000);
-  
-  Serial.println("90");
-  //delay(1000);
-  pwm.setPWM(2, 0, pulseWidth(90));  
-  delay(2000);
-
-  Serial.println("0 2");
-  //delay(1000);
-  pwm.setPWM(3, 0, pulseWidth(0));  
-  delay(2000);
-
-  Serial.println("90 2");
-  //delay(1000);
-  pwm.setPWM(3, 0, pulseWidth(90));  
-  delay(2000);
-   */
-
-  /*
-  // Drive each PWM in a 'wave'
-  for (uint16_t i=0; i<4096; i += 8)
-  {
-    for (uint8_t pwmnum=0; pwmnum < 16; pwmnum++)
-    {
-      pwm.setPWM(pwmnum, 0, (i + (4096/16)*pwmnum) % 4096 );
-      if(pwmnum == 0)
-        Serial.println((i + (4096/16)*pwmnum) % 4096);
-    }
-  }*/
+    
 }
